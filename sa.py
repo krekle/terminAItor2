@@ -1,26 +1,42 @@
 from abc import ABCMeta, abstractmethod
 
+#
+# Abstract class
+#
 
 class SimulatedAnnealing(object):
-
+    
+    #
+    # Define as an abstract class
+    #
+    
     __metaclass__ = ABCMeta
-
-    def __init__(self, temp=100):
-        self.list = ()   # [score, unique type(grid)]
-        self.temperature = temp
-
-    def get_best_scores(self):
-        return self.list.sort(key=lambda x: x[0])
-
+    
+    #
+    # Constructor
+    #
+    
+    def __init__(self):
+        # Set temperatur
+        self.temperature = 100
+        self.temperature_min = 0
+        
+        # Init nodes
+        self.current = None
+        self.next = None
+    
+    #
+    # The objective function
+    #
+    
     @abstractmethod
-    def objective_function(self, current):
+    def objective_function(self):
         pass
-
+    
+    #
+    # Return neigbours for the current Node
+    #
+    
     @abstractmethod
     def get_neighbour(self, neighbour):
-        #n = number of neighbours
-        pass
-
-    @abstractmethod
-    def sa(self):
         pass
