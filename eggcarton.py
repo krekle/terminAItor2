@@ -1,5 +1,6 @@
 from sa import SimulatedAnnealing
 import random
+import math
 
 class Egg(SimulatedAnnealing):
     
@@ -13,8 +14,8 @@ class Egg(SimulatedAnnealing):
         self.temperature_min = 0
         
         # Init nodes
-        self.current = None
-        self.next = None
+        self.current = 0
+        self.next = 0
         
         self.board = None
         
@@ -22,6 +23,8 @@ class Egg(SimulatedAnnealing):
         self.m = 5
         self.k = 2
         self.max_pieces = 10
+        
+        self.debug = 0
         
         self.objective_function()
     
@@ -36,8 +39,6 @@ class Egg(SimulatedAnnealing):
         
         for i in range(len(self.board)):
             print output_board[i]
-        
-        print " "
         
     def set_first_board(self):
         pieces_left = 10
@@ -55,6 +56,9 @@ class Egg(SimulatedAnnealing):
         
     
     def objective_function(self):
+        if self.debug == 100:
+            return
+        
         # Check if we should init the board or handle a pick neighbours
         if self.board is None:
             # No board set, init board
@@ -65,16 +69,42 @@ class Egg(SimulatedAnnealing):
             
             # Debug
             self.print_board()
-            
-            # Call self
-            self.objective_function()
+            self.current = self.calculate_score(self.board)
+            print self.current
         else:
             neighbour = self.get_neighbour(random.randint(0, 4))
             
             # Debug
             self.print_board(neighbour)
             
+            new_value = self.calculate_score(neighbour)
+            print new_value
+            
+            if new_value <= self.current:
+                self.current = new_value
+                self.board = neighbour
         
+        self.debug += 1
+        
+        # Call self
+        self.objective_function()
+            
+        
+    
+    def calculate_score(self, board):
+        score = 0
+        
+        # Loop horizontally
+        for i in range(len(board)):
+            horizontal_score = 0
+            for j in range(len(board[i])):
+                if (board[i][j] == 'o'):
+                    horizontal_score += 1
+            score += math.fabs(self.k - horizontal_score)
+        print " "
+        return score
+            
+            
     
     #
     # Return neigbours for the current Node
