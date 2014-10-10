@@ -1,6 +1,7 @@
 from sa import SimulatedAnnealing
-import random
+from random import *
 import math
+
 
 class Egg(SimulatedAnnealing):
     
@@ -9,7 +10,7 @@ class Egg(SimulatedAnnealing):
     #
     
     def __init__(self):
-        # Set max temperatur
+        # Set max temperature
         self.temperature = 100
         self.temperature_min = 0
         
@@ -31,7 +32,7 @@ class Egg(SimulatedAnnealing):
     def init_board(self):
         self.board = [[None for i in range(self.n)] for j in range(self.m)]
     
-    def print_board(self, board = None):
+    def print_board(self, board=None):
         if board is None:
             output_board = self.board
         else:
@@ -43,17 +44,15 @@ class Egg(SimulatedAnnealing):
     def set_first_board(self):
         pieces_left = 10
         while True:
-            rand1 = random.randint(0, self.n - 1)
-            rand2 = random.randint(0, self.m - 1)
+            rand1 = randint(0, self.n - 1)
+            rand2 = randint(0, self.m - 1)
             
-            if self.board[rand1][rand2] == None:
+            if self.board[rand1][rand2] is None:
                 self.board[rand1][rand2] = 'o'
                 pieces_left -= 1
-            
+
             if pieces_left == 0:
                 break
-            
-        
     
     def objective_function(self):
         if self.debug == 100:
@@ -72,7 +71,7 @@ class Egg(SimulatedAnnealing):
             self.current = self.calculate_score(self.board)
             print self.current
         else:
-            neighbour = self.get_neighbour(random.randint(0, 4))
+            neighbour = self.get_neighbour(randint(0, 4))
             
             # Debug
             self.print_board(neighbour)
@@ -89,8 +88,7 @@ class Egg(SimulatedAnnealing):
         # Call self
         self.objective_function()
             
-        
-    
+
     def calculate_score(self, board):
         score = 0
         
@@ -98,19 +96,23 @@ class Egg(SimulatedAnnealing):
         for i in range(len(board)):
             horizontal_score = 0
             for j in range(len(board[i])):
-                if (board[i][j] == 'o'):
+                if board[i][j] is 'o':
                     horizontal_score += 1
             score += math.fabs(self.k - horizontal_score)
         print " "
         return score
-            
-            
     
     #
     # Return neigbours for the current Node
     #
-    
+
     def get_neighbour(self, neighbour):
+        # Total random
+        for i in range(0, len(self.board)):
+            shuffle(self.board[i])
+        shuffle(self.board)
+        # Not diagonal random. damn.
+
         return self.generate_change(self.board)
     
     #
@@ -123,8 +125,8 @@ class Egg(SimulatedAnnealing):
         has_piece = False
         
         while True:
-            rand1 = random.randint(0, self.n - 1)
-            rand2 = random.randint(0, self.m - 1)
+            rand1 = randint(0, self.n - 1)
+            rand2 = randint(0, self.m - 1)
             
             if has_piece is False:
                 if new_board[rand1][rand2] is not None:
@@ -137,6 +139,9 @@ class Egg(SimulatedAnnealing):
         
         return new_board
     
-    
-    
-Egg()
+
+# Check for abstract class
+if __name__ == '__main__':
+    print 'Subclass:', issubclass(Egg, SimulatedAnnealing)
+    print 'Instance:', isinstance(Egg(), SimulatedAnnealing)
+    Egg()
