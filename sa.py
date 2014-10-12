@@ -1,7 +1,7 @@
 from abc import ABCMeta, abstractmethod
 from random import randint, random, shuffle, uniform
 from math import *
-
+import traceback
 
 #
 # TIP of the day -> ndarray for objective function
@@ -79,17 +79,27 @@ class SimulatedAnnealing(object):
 
 
 class State(object):
+
+    #
+    # State is an way of easily creating new grid states, either completely new ones or
+    # a modified version of a current one
+    #
+
     n = 5
     m = 5
     k = 2
 
-    def __init__(self, grid=None):
-        self.grid = None
-        if grid is None:
+    #
+    # Constructor
+    #
+
+    def __init__(self, board):
+        print 'init'
+        if board is None:
             self.init_grid()
             self.create_random()
         else:
-            self.grid = self.randomize_current(self, grid)
+            self.grid = self.randomize_current(board)
 
     #
     # Initialize a new empty grid
@@ -108,7 +118,7 @@ class State(object):
             rand1 = randint(0, self.n - 1)
             rand2 = randint(0, self.m - 1)
 
-            if self.grid[rand1][rand2] is None:
+            if self.grid[rand1][rand2] is 0:
                 self.grid[rand1][rand2] = 1
                 pieces_left -= 1
             else:
@@ -118,7 +128,7 @@ class State(object):
                 break
 
     #
-    # Change the grid/state a litte
+    # Change the grid/state a little
     #
 
     def randomize_current(self, grid):
@@ -131,20 +141,29 @@ class State(object):
             rand2 = randint(0, self.m - 1)
 
             if has_piece is False:
-                if new_grid[rand1][rand2] is not None:
-                    new_grid[rand1][rand2] = None
+                if new_grid[rand1][rand2] is not 0:
+                    new_grid[rand1][rand2] = 0
                     has_piece = True
             else:
-                if new_grid[rand1][rand2] is None:
-                    new_grid[rand1][rand2] = 'o'
+                if new_grid[rand1][rand2] is 0:
+                    new_grid[rand1][rand2] = 1
                     break
 
         return new_grid
 
-    def __str__(self):
+    #
+    # Print the grid
+    #
+
+    def printer(self):
         for i in range(len(self.grid)):
-            print self.grid[i]
+            print str(self.grid[i])
 
 
-state = State()
-print state
+try:
+    state = State(None)
+    state.printer()
+    state2 = State(state.grid)
+    state2.printer()
+except:
+    traceback.print_exc()
