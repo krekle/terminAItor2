@@ -59,12 +59,12 @@ class SimulatedAnnealing(object):
 
     def sa(self, current, goal):
         self.current = current
-        while self.temperature > self.temperature_min and current[0] < goal:  # Should also check if goal is reached in a generic condition
+        while self.temperature > self.temperature_min and current.cost < goal:  # Should also check if goal is reached in a generic condition
             neighbours = self.get_neighbour(self.current)
 
             # If the neighbour is better change current -> neighbour
             for n in neighbours:
-                if n[0] > current[0]:
+                if n.cost > current.cost:
                     current = n
 
             # if not, change the current to neighbour only if, the random function hits
@@ -73,8 +73,9 @@ class SimulatedAnnealing(object):
                 jump = uniform(0, 1)
                 if jump < math.pow(math.e, -(neighbour[0]-self.current[0]) / self.temp):
                     #Jump to random neighbour
-                    self.current = shuffle(neighbour)
+                    self.current = shuffle(neighbours)[0]
 
+        assert isinstance(self.current, object)
         return self.current
 
     def reduce_temp(self):
@@ -177,9 +178,9 @@ class State(object):
         '''
         :return: two lists of diagonals
 
-        the method add X before an after a line to get diagonals in one coloumn, then zips and removes the X'es
+        the method add X before an after a line to get diagonals in one column, then zips and removes the X'es
 
-        | 1 | 2 | 3 |      | x | x | 1 | 2 | 3 |
+        | 1 | 2 | 3 |      | x | x | 1 | 2 | 3 | (this is left_diagonal)
         | 4 | 5 | 6 |  =>  | x | 4 | 5 | 6 | x | each column is now a diagonal, zip it, remove x'es and we're done
         | 7 | 8 | 9 |      | 7 | 8 | 9 | x | x |
 
