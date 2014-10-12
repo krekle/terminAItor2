@@ -138,6 +138,7 @@ class State(object):
                 pieces_left -= 1
             else:
                 self.grid[rand1][rand2] = 0
+                pieces_left += 1
 
             if pieces_left == 0:
                 break
@@ -172,15 +173,18 @@ class State(object):
 
     def calculate_score(self):
 
-        sum = 0
+        cost = 100
 
         # Vertical
-        for i in self.grid:
-            sum += sum(i)
+        for i in range(0, len(self.grid)):
+            cost -= abs(sum(self.grid[i]) - self.k)
+        # Makes it just as bad to have 1 piece on a row as 3 pieces, might want to reevaluate this
 
         #Horizontal
-        zipped_horizontal = zip(self.grid)
-        sum += [sum(element) for element in zipped_horizontal]
+        zipped_horizontal = zip(*self.grid)  # * for unpacking list
+        for i in range(0, len(zipped_horizontal)):
+            cost -= abs(sum(zipped_horizontal[i]) - self.k)
+        # Makes it just as bad to have 1 piece on a row as 3 pieces, might want to reevaluate this
 
         # \ Diagonal
         # TODO
@@ -188,7 +192,8 @@ class State(object):
         # / Diagonal
         # TODO
 
-        return sum
+        print cost
+        return cost
     #
     # Print the grid
     #
