@@ -60,10 +60,10 @@ class SimulatedAnnealing(object):
     def sa(self, current, goal):
         self.current = current
         while self.temperature > self.temperature_min and current[0] < goal:  # Should also check if goal is reached in a generic condition
-            neighbour = self.get_neighbour(self.current)
+            neighbours = self.get_neighbour(self.current)
 
             # If the neighbour is better change current -> neighbour
-            for n in neighbour:
+            for n in neighbours:
                 if n[0] > current[0]:
                     current = n
 
@@ -77,29 +77,44 @@ class SimulatedAnnealing(object):
 
         return self.current
 
-
-class State(object):
+    def reduce_temp(self):
+        pass
 
     #
     # State is an way of easily creating new grid states, either completely new ones or
     # a modified version of a current one
     #
 
-    n = 5
-    m = 5
-    k = 2
+
+class State(object):
 
     #
     # Constructor
     #
 
-    def __init__(self, board):
-        print 'init'
-        if board is None:
+    def __init__(self, grid=None, n=None, k=None):
+        self.cost = 0
+
+        # Setting the size of the grid
+        if n is not None and k is not None:
+            self.m = n
+            self.n = n
+            self.k = k
+        else:
+            self.m = 5
+            self.n = 5  # Default n,m = 5 and k = 2
+            self.k = 2
+
+        #Creating new grid or modifying current one
+        if grid is None:
+            self.grid = None
             self.init_grid()
             self.create_random()
         else:
-            self.grid = self.randomize_current(board)
+            self.grid = None
+            self.grid = self.randomize_current(grid)
+
+        self.cost = self.calculate_score()
 
     #
     # Initialize a new empty grid
@@ -151,6 +166,29 @@ class State(object):
 
         return new_grid
 
+    #
+    # Calculate the score (aka objective function)
+    #
+
+    def calculate_score(self):
+
+        sum = 0
+
+        # Vertical
+        for i in self.grid:
+            sum += sum(i)
+
+        #Horizontal
+        zipped_horizontal = zip(self.grid)
+        sum += [sum(element) for element in zipped_horizontal]
+
+        # \ Diagonal
+        # TODO
+
+        # / Diagonal
+        # TODO
+
+        return sum
     #
     # Print the grid
     #
