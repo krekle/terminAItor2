@@ -173,6 +173,19 @@ class State(object):
     #
 
     def diagonals(self):
+
+        '''
+        :return: two lists of diagonals
+
+        the method add X before an after a line to get diagonals in one coloumn, then zips and removes the X'es
+
+        | 1 | 2 | 3 |      | x | x | 1 | 2 | 3 |
+        | 4 | 5 | 6 |  =>  | x | 4 | 5 | 6 | x | each column is now a diagonal, zip it, remove x'es and we're done
+        | 7 | 8 | 9 |      | 7 | 8 | 9 | x | x |
+
+        '''
+
+
         forward_x = self.n - 1
         backward_x = 0
         left_diag = list()  # \
