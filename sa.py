@@ -114,6 +114,7 @@ class State(object):
             self.grid = None
             self.grid = self.randomize_current(grid)
 
+        self.diagonals()
         self.cost = self.calculate_score()
 
     #
@@ -168,11 +169,36 @@ class State(object):
         return new_grid
 
     #
+    # Method for finding diagonals
+    #
+
+    def diagonals(self):
+        forward_x = self.n - 1
+        backward_x = 0
+        left_diag = list()  # \
+        right_diag = list()  # /
+
+        for i in range(0, len(self.grid)):
+            left_diag.append(['X' for k in range(forward_x)] + self.grid[i] + ['X' for j in range(backward_x)])
+            right_diag.append(['X' for h in range(backward_x)] + self.grid[i] + ['X' for g in range(forward_x)])
+            forward_x -= 1
+            backward_x += 1
+
+        left_diag = zip(*left_diag)
+        right_diag = zip(*right_diag)
+
+        for y in range(len(left_diag)):
+            left_diag[y] = [x for x in left_diag[y] if x != 'X']
+            right_diag[y] = [x for x in right_diag[y] if x != 'X']
+
+        return left_diag, right_diag
+    #
     # Calculate the score (aka objective function)
     #
 
     def calculate_score(self):
 
+        #Highest possible score, should probably be max_score - min_score
         cost = 100
 
         # Vertical
@@ -186,14 +212,20 @@ class State(object):
             cost -= abs(sum(zipped_horizontal[i]) - self.k)
         # Makes it just as bad to have 1 piece on a row as 3 pieces, might want to reevaluate this
 
+        left_diagonal, right_diagonal = self.diagonals()
         # \ Diagonal
-        # TODO
+        for diag_l in left_diagonal:
+            if len(diag_l) >= self.k:
+                cost -= sum(diag_l)
 
         # / Diagonal
-        # TODO
+        for diag_r in right_diagonal:
+            if len(diag_r) >= self.k:
+                cost -= sum(diag_r)
 
         print cost
         return cost
+
     #
     # Print the grid
     #
@@ -206,7 +238,5 @@ class State(object):
 try:
     state = State(None)
     state.printer()
-    state2 = State(state.grid)
-    state2.printer()
 except:
     traceback.print_exc()
