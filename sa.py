@@ -4,10 +4,6 @@ from math import *
 import traceback
 
 #
-# TIP of the day -> ndarray for objective function
-#
-
-#
 # Abstract class
 #
 
@@ -72,7 +68,7 @@ class SimulatedAnnealing(object):
             else:
                 jump = uniform(0, 1)
                 if jump < math.pow(math.e, -(neighbour[0]-self.current[0]) / self.temp):
-                    #Jump to random neighbour
+                    # Jump to random neighbour
                     self.current = shuffle(neighbours)[0]
 
         assert isinstance(self.current, object)
