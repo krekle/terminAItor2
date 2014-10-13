@@ -23,6 +23,8 @@ class Board:
         self.y = y
         self.k = k
         
+        self.active_nodes = []
+        
         # Populate the board
         self.board = [[node.Node(self) for i in range(x)] for j in range(y)]
         self.populate()
@@ -45,15 +47,18 @@ class Board:
     #
     
     def move(self, pos_x, pos_y, direction):
+        # Remove active nodes
+        self.active_nodes = []
+        
         # Reset old node
         old_node = self.get_node(pos_x, pos_y)
         old_node.value = None
         
         # Check what way to move
         if direction is 'up':
-            pos_y += 1
-        else:
             pos_y -= 1
+        else:
+            pos_y += 1
         
         # Get new node
         new_node = self.get_node(pos_x, pos_y)
@@ -64,7 +69,37 @@ class Board:
     #
     
     def get_score(self):
-        return 5
+        # Storing the score here
+        score = 0
+        
+        # Lists for all the values
+        list_x = [0 for i in range(self.x)]
+        list_y = [0 for i in range(self.x)]
+        list_diagonal_left = [0 for i in range(self.x + self.y - 1)]
+        list_diagonal_right = [0 for i in range(self.x + self.y - 1)]
+        
+        # Populate position lists
+        for x in range(self.x):
+            for y in range(self.y):
+                if self.get_node(x, y).value is not None:
+                    self.active_nodes.append(self.get_node(x, y))
+                    list_x[x] += 1
+                    list_y[y] += 1
+                    
+                    list_diagonal_left[x + y] += 1
+                    list_diagonal_right[self.x - x + y - 1] += 1
+        
+        # Check position lists against 
+        for x in range(self.x):
+            for y in range(self.y):
+                if self.get_node(x, y).value is not None:
+                    if list_x[x] <= self.k and list_y[y] <= self.k and \
+                       list_diagonal_left[x + y] <= self.k and \
+                       list_diagonal_right[self.x - x + y - 1] <= self.k:
+                        score += 1
+        
+        # Return score
+        return score / float(self.x * self.k)
     
     #
     # Populate the board
@@ -94,6 +129,9 @@ class Board:
                     # Not already active, activate
                     temp_node.value = True
                     
+                    # Add to list
+                    self.active_nodes.append(temp_node)
+                    
                     # Increase number of generated nodes
                     generated += 1
     
@@ -101,27 +139,18 @@ class Board:
     # Returns the first node we can find
     #
     
-    def get_start_node(self):
-        # Loop x
-        for pos_x in range(self.x):
-            # Loop y
-            for pos_y in range(self.y):
-                # Get node at current position
-                temp_node = self.get_node(pos_x, pos_y)
-                
-                # Check the value
-                if temp_node.value is not None:
-                    # Node is active, return this
-                    return temp_node
+    def get_random_node(self):
+        if len(self.active_nodes) == 0:
+            self.get_score()
         
-        # This should never happen
-        return None
+        return random.choice(self.active_nodes)
     
     #
     # Debug
     #
     
     def print_pretty(self):
-        print "---------------"
+        
         for i in range(self.y):
             print self.board[i]
+        print "---------------"

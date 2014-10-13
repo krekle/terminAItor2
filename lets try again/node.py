@@ -57,9 +57,9 @@ class Node:
         
         # Check what direction to move
         if direction is 'up':
-            pos_y += 1
-        else:
             pos_y -= 1
+        else:
+            pos_y += 1
         
         # Check if desiered move is valid
         if pos_x >= 0 and pos_x < self.board.x and pos_y >= 0 and pos_y < self.board.y and self.board.get_node(pos_x, pos_y).value is None:
@@ -76,7 +76,7 @@ class Node:
     def get_neighbours(self):
         # Store in this array
         neighbours = []
-        
+         
         # Loop y
         for y in range(self.board.y):
             # Loop x
@@ -85,7 +85,7 @@ class Node:
                 temp_node = self.board.get_node(x, y)
                 
                 # Only keep going if the current node is active
-                if temp_node is not None:
+                if temp_node is not None and temp_node is not self and temp_node.value is not None:
                     # Active, check up move
                     if temp_node.is_valid_position('up') is True:
                         # Up move is valid, add to array
