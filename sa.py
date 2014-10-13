@@ -193,8 +193,8 @@ class State(object):
         right_diag = list()  # /
 
         for i in range(0, len(self.grid)):
-            left_diag.append(['X' for k in range(forward_x)] + self.grid[i] + ['X' for j in range(backward_x)])
-            right_diag.append(['X' for h in range(backward_x)] + self.grid[i] + ['X' for g in range(forward_x)])
+            left_diag.append(['X' for i in range(forward_x)] + self.grid[i] + ['X' for i in range(backward_x)])
+            right_diag.append(['X' for i in range(backward_x)] + self.grid[i] + ['X' for i in range(forward_x)])
             forward_x -= 1
             backward_x += 1
 
@@ -230,12 +230,12 @@ class State(object):
         # \ Diagonal
         for diag_l in left_diagonal:
             if len(diag_l) >= self.k:
-                cost -= sum(diag_l)
+                cost -= abs(sum(diag_l))
 
         # / Diagonal
         for diag_r in right_diagonal:
             if len(diag_r) >= self.k:
-                cost -= sum(diag_r)
+                cost -= abs(sum(diag_r))
 
         print cost
         return cost
