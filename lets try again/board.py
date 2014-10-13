@@ -1,13 +1,12 @@
 import node
 
 class Board:
-    def __init__(self, x, y):
+    def __init__(self, x, y, k):
         self.x = x
         self.y = y
-        self.board = [[node.Node(i, j) for i in range(x)] for j in range(y)]
-    
-    def get_row(y):
-        return self.board[y]
+        self.k = k
+        self.board = [[node.Node(self) for i in range(x)] for j in range(y)]
+        self.populated = False
     
     def get_node(self, node_x, node_y):
         if node_x >= 0 and node_x < self.x and node_y >= 0 and node_y < self.y:
@@ -20,7 +19,8 @@ class Board:
             self.board[y][x] = node
     
     
-    def print_pretty(self, ):
+    def print_pretty(self):
+        print "---------------"
         for i in range(self.y):
             print self.board[i]
         
