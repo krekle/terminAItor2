@@ -25,7 +25,7 @@ class EggProblem:
         self.temperature = 100
         
         # Init the board
-        self.board = board.Board(5, 5, 2, self)
+        self.board = board.Board(8, 8, 1, self)
         
         # Get start node
         self.current = self.board.get_random_node()
