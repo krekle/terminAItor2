@@ -7,7 +7,7 @@
 
 import copy
 import random
-import board
+import egg_board
 
 '''
 Node
@@ -15,7 +15,7 @@ Node
 One Node on the board
 '''
 
-class Node:
+class EggNode:
     
     #
     # Constructor
@@ -33,7 +33,7 @@ class Node:
         if self.value is None:
             return 'o'
         else:
-            return 'x'
+            return '\033[91mx\033[0m'
     
     #
     # Returns the position for this node (in a hackyyy way)
@@ -94,7 +94,7 @@ class Node:
                     
                     # Check if generate random
                     if (random.uniform(0, 0.90) < (self.board.solver.temperature / self.board.solver.temperature_max)):
-                        temp_board = board.Board(self.board.x, self.board.y, self.board.k, self.board.solver)
+                        temp_board = egg_board.EggBoard(self.board.x, self.board.y, self.board.k, self.board.solver)
                         neighbours.append(temp_board)
                     else:
                         # Active, check up move

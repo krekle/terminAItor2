@@ -5,7 +5,7 @@
 # Imports
 #
 
-import node
+import egg_node
 import random
 
 '''
@@ -14,7 +14,7 @@ Board
 Class that keeps track of the posision of all the nodes
 '''
 
-class Board:
+class EggBoard:
     
     #
     # Constructor
@@ -112,7 +112,7 @@ class Board:
     
     def populate(self):
         # Create empty matrix for nodes
-        self.board = [[node.Node(self) for i in range(self.x)] for j in range(self.y)]
+        self.board = [[egg_node.EggNode(self) for i in range(self.x)] for j in range(self.y)]
         
         # Loop each column
         for pos_x in range(self.x):

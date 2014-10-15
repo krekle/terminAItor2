@@ -5,7 +5,7 @@
 # Imports
 #
 
-import board
+import egg_board
 import math
 import random
 import copy
@@ -27,8 +27,61 @@ class EggProblem:
         self.temperature_max = 100
         self.temperature = 100
         
+        # Variables
+        self.m = None
+        self.k = None
+        
+        # Ask user what to solve
+        self.ask()
+    
+    #
+    # Ask user what to solve
+    #
+    
+    def ask(self):
+        # Keep track of stuff
+        has_m = False
+        has_k = False
+        
+        # Loop 'till user has inputted stuff
+        while True:
+            # Check if we are done
+            if has_m and has_k:
+                # Done!
+                break
+            else:
+                # Avoid exceptions
+                try:
+                    # Ask user
+                    if not has_m:
+                        ipt = str(input("Enter m and n value: "))
+                    else:
+                        ipt = str(input("Enter k value: "))
+                    
+                    # Try to parse
+                    val = int(ipt)
+                    
+                    # Update value
+                    if not has_m:
+                        self.m = val
+                        has_m = True
+                    else:
+                        self.k = val
+                        has_k = True
+                except Exception:
+                    pass
+        
+        # Gogo
+        self.prepare()
+    
+    
+    #
+    # Prepare
+    #
+    
+    def prepare(self):
         # Init the board
-        self.board = board.Board(8, 8, 1, self)
+        self.board = egg_board.EggBoard(self.m, self.m, self.k, self)
         
         # Get start node
         self.current = self.board.get_random_node()
@@ -38,6 +91,7 @@ class EggProblem:
         
         # Solve the problem
         self.solve()
+    
     
     #
     # Function that solved the actual problem
@@ -85,6 +139,10 @@ class EggProblem:
                 # Print
                 self.board.print_pretty()
             else:
+                # Check if we are about to divide on zero
+                if score <= 0.0001:
+                    score = 0.01
+                
                 # Check if we should explore!
                 delta = math.exp(((highest_neighbour_score - score) / score) / self.temperature)
                 
@@ -106,6 +164,8 @@ class EggProblem:
             # Did not solve it
             print "Did not finish"
             print "Optimal score was: " + str(score)
+
+
 #
 # Check if we should run the script
 #
