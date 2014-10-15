@@ -17,7 +17,10 @@ class Board:
     # Constructor
     #
     
-    def __init__(self, x, y, k):
+    def __init__(self, x, y, k, solver):
+        # Reference to solver
+        self.solver = solver
+        
         # Set posision and k value
         self.x = x
         self.y = y
@@ -26,7 +29,6 @@ class Board:
         self.active_nodes = []
         
         # Populate the board
-        self.board = [[node.Node(self) for i in range(x)] for j in range(y)]
         self.populate()
     
     #
@@ -106,6 +108,9 @@ class Board:
     #
     
     def populate(self):
+        # Create empty matrix for nodes
+        self.board = [[node.Node(self) for i in range(self.x)] for j in range(self.y)]
+        
         # Loop each column
         for pos_x in range(self.x):
             # Score how many we have generate for this column

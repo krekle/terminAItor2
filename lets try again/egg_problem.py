@@ -21,10 +21,11 @@ class EggProblem:
     
     def __init__(self):
         # Set temperature
-        self.tempreature = 100
+        self.temperature_max = 100
+        self.temperature = 100
         
         # Init the board
-        self.board = board.Board(5, 5, 1)
+        self.board = board.Board(5, 5, 2, self)
         
         # Get start node
         self.current = self.board.get_random_node()
@@ -48,7 +49,7 @@ class EggProblem:
                 print self.current.get_score()
                 self.board.print_pretty()
             
-            if self.tempreature == 0:
+            if self.temperature == 0:
                 break
             
             # Calculate score for this sate
@@ -79,7 +80,7 @@ class EggProblem:
                 self.current = self.board.get_random_node()
             else:
                 # Check if we should explore!
-                delta = math.exp(((highest_neighbour_score - score) / score) / self.tempreature)
+                delta = math.exp(((highest_neighbour_score - score) / score) / self.temperature)
                 print str(highest_neighbour_score) + " - " + str(delta)
                 if random.random() >  min(0.9, delta):
                     # Explooore
@@ -87,7 +88,7 @@ class EggProblem:
                     self.current = self.board.get_random_node()
             
             # Decrease temperature
-            self.tempreature -= 0.1
+            self.temperature -= 0.1
         self.board.print_pretty()
 
 #
