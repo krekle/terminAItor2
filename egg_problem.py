@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 #
 # Imports
@@ -10,6 +12,7 @@ import copy
 
 '''
 EggProblem
+
 Class for the Egg problem
 '''
 
@@ -41,19 +44,14 @@ class EggProblem:
     #
     
     def solve(self):
-        tries = 0
         # Loop untill we find the solution or the temperature goes out
         while True:
-            tries += 1
-            if tries % 1010000:
-                print self.current.get_score()
-                self.board.print_pretty()
-            
+            # Check if we are finished
             if self.temperature == 0:
                 break
             
             # Calculate score for this sate
-            score = self.board.get_score()
+            score = self.board.objective_function()
             
             # Check if the optimal solution has been found
             if score >= 1.0:
@@ -69,7 +67,7 @@ class EggProblem:
             
             # Find the state neighbour with the highest score
             for neighbour in neighbours:
-                neighbour_score = neighbour.get_score()
+                neighbour_score = neighbour.objective_function()
                 if neighbour_score >= highest_neighbour_score:
                     new_node = neighbour
                     highest_neighbour_score = neighbour_score
@@ -81,7 +79,8 @@ class EggProblem:
             else:
                 # Check if we should explore!
                 delta = math.exp(((highest_neighbour_score - score) / score) / self.temperature)
-                print str(highest_neighbour_score) + " - " + str(delta)
+                
+                # Check if we should explore
                 if random.random() >  min(0.9, delta):
                     # Explooore
                     self.board = new_node
@@ -92,15 +91,8 @@ class EggProblem:
         self.board.print_pretty()
 
 #
-# Main class
+# Check if we should run the script
 #
 
-def main():
+if __name__ == '__main__':
     EggProblem()
-
-
-#
-# Gogo
-#
-
-main()

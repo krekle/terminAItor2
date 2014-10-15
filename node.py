@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 #
 # Imports
@@ -9,6 +11,7 @@ import board
 
 '''
 Node
+
 One Node on the board
 '''
 
@@ -115,6 +118,6 @@ class Node:
     # Return the score
     #
     
-    def get_score(self):
+    def objective_function(self):
         # We just call the method implemented in board
-        return self.board.get_score()
+        return self.board.objective_function()

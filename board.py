@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 #
 # Imports
@@ -8,6 +10,7 @@ import random
 
 '''
 Board
+
 Class that keeps track of the posision of all the nodes
 '''
 
@@ -70,7 +73,7 @@ class Board:
     # Calulcate score
     #
     
-    def get_score(self):
+    def objective_function(self):
         # Storing the score here
         score = 0
         
@@ -146,7 +149,7 @@ class Board:
     
     def get_random_node(self):
         if len(self.active_nodes) == 0:
-            self.get_score()
+            self.objective_function()
         
         return random.choice(self.active_nodes)
     
@@ -158,4 +161,4 @@ class Board:
         
         for i in range(self.y):
             print self.board[i]
-        print "---------------"
+        print " "
