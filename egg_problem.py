@@ -33,8 +33,8 @@ class EggProblem:
         # Get start node
         self.current = self.board.get_random_node()
         
-        # Debug for the shit
-        #self.board.print_pretty()
+        # Print first board
+        self.board.print_pretty()
         
         # Solve the problem
         self.solve()
@@ -56,6 +56,10 @@ class EggProblem:
             # Check if the optimal solution has been found
             if score >= 1.0:
                 # We have solved it!
+                self.board.print_pretty()
+                print "Finished!"
+                
+                # Break loop
                 break
             
             # Generate the neighbours for this state
@@ -74,8 +78,12 @@ class EggProblem:
                 
             # Check if better
             if highest_neighbour_score > score:
+                # Set new info
                 self.board = new_node
                 self.current = self.board.get_random_node()
+                
+                # Print
+                self.board.print_pretty()
             else:
                 # Check if we should explore!
                 delta = math.exp(((highest_neighbour_score - score) / score) / self.temperature)
@@ -85,11 +93,19 @@ class EggProblem:
                     # Explooore
                     self.board = new_node
                     self.current = self.board.get_random_node()
+                    
+                    # Print
+                    self.board.print_pretty()
             
             # Decrease temperature
             self.temperature -= 0.1
-        self.board.print_pretty()
-
+        
+        # Check if we solved it or not
+        score = self.board.objective_function()
+        if score < 1.0:
+            # Did not solve it
+            print "Did not finish"
+            print "Optimal score was: " + str(score)
 #
 # Check if we should run the script
 #
